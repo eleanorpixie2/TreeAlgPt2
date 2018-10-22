@@ -16,8 +16,10 @@ namespace Tree_Pt2
         //Holds a list of all the siblings needed to be added at the same depth
         private List<Node> ToBeAdded = new List<Node>();
 
+        //temp node value for finding node by id in node
         public static Node temp;
 
+        //starting function with file input
         public void Start()
         {
             root = new Node(0, null, null);
@@ -25,16 +27,19 @@ namespace Tree_Pt2
             LoadContent();
         }
  
+        //starting function for user input
         public void StartUser()
         {
             root = new Node(0, null, null);
             root.Depth = -1;
         }
 
+        //load content from a file
         private bool LoadContent()
         {
             using (StreamReader sr = new StreamReader(@"C:\workspace\people.txt"))
             {
+                //stores each line of file
                 string line;
                 int count = 0;
                 int parentCount = 0;
@@ -90,11 +95,14 @@ namespace Tree_Pt2
             }//end of StreamReader
         }//end of LoadContent()
 
+        //add a node to a temporary list of nodes
         private void AddNodeToList(int count, List<Node> toBeAdded, string line)
         {
+            //create new node and add it to list
             ToBeAdded.Add(new Node(count, null, line));
         }
 
+        //add all nodes of the same depth to tree
         private void AddNodesToTree(List<Node> toBeAdded)
         {
             foreach (var sib in toBeAdded)
@@ -103,18 +111,22 @@ namespace Tree_Pt2
             }
         }
 
+        //write out to a file
         public void OutputToFile(Node node)
         {
             string line = "";
             using (StreamWriter sw = new StreamWriter(@"C:\workspace\test.txt", true))
             {
                 line += "\n";
+                //assign the appropriate amount of tabs based on depth
                 for (int i = 0; i < node.Depth; i++)
                 {
                     line += "\t";
                 }
+                //write line out to file
                 sw.WriteLine(line+node.Content);
             }
+            //go through each child node until all nodes have been written out
                 if (node.Children.Count > 0)
                 {
                     foreach (Node n in node.Children)
