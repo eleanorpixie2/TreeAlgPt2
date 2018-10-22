@@ -16,11 +16,19 @@ namespace Tree_Pt2
         //Holds a list of all the siblings needed to be added at the same depth
         private List<Node> ToBeAdded = new List<Node>();
 
+        public static Node temp;
+
         public void Start()
         {
             root = new Node(0, null, null);
             root.Depth = -1;
             LoadContent();
+        }
+ 
+        public void StartUser()
+        {
+            root = new Node(0, null, null);
+            root.Depth = -1;
         }
 
         private bool LoadContent()
@@ -93,6 +101,28 @@ namespace Tree_Pt2
             {
                 tempNode.AddNode(sib);
             }
+        }
+
+        public void OutputToFile(Node node)
+        {
+            string line = "";
+            using (StreamWriter sw = new StreamWriter(@"C:\workspace\test.txt", true))
+            {
+                line += "\n";
+                for (int i = 0; i < node.Depth; i++)
+                {
+                    line += "\t";
+                }
+                sw.WriteLine(line+node.Content);
+            }
+                if (node.Children.Count > 0)
+                {
+                    foreach (Node n in node.Children)
+                    {
+                        OutputToFile(n);
+                    }
+                }
+               
         }
     }
 }

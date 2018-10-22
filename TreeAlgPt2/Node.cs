@@ -135,10 +135,9 @@ namespace Tree_Pt2
 
             return matches;
         }
-        Node temp = null;
+        
         public Node FindNode(string id)
         {
-            
             if (Children.Count > 0)
             {
                 foreach (var child in Children)
@@ -146,11 +145,12 @@ namespace Tree_Pt2
                     if (!child.Id.Equals(id))
                     {
                         child.FindNode(id);
+                        
                     }
                     else
                     {
-                        temp = child;
-                        return temp;
+                        Tree.temp = child;
+                        return Tree.temp;
                     }
                 }
             }
@@ -158,12 +158,13 @@ namespace Tree_Pt2
             {
                 if (this.Id.Equals(id))
                 {
-                    return this;
+                    Tree.temp = this;
+                    return Tree.temp;
                 }
 
             }
 
-            return temp;
+            return Tree.temp;
         }
 
         public string Get(string id, bool shouldGetBranch)
@@ -210,8 +211,18 @@ namespace Tree_Pt2
 
             toBeMoved.Parent.Children.Remove(toBeMoved);
             whereToBeMoved.Children.Add(toBeMoved);
+            IncreaseDepth(toBeMoved, whereToBeMoved);
 
             return true;
+        }
+
+        private void IncreaseDepth(Node increaseing,Node constant)
+        {
+            increaseing.Depth = constant.Depth + 1;
+            foreach(Node n in increaseing.Children)
+            {
+                IncreaseDepth(n, n.Parent);
+            }
         }
     }
 }

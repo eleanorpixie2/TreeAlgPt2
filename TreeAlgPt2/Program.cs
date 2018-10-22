@@ -9,16 +9,140 @@ namespace Tree_Pt2
         static void Main(string[] args)
         {
 
-            test.Start();
-            GettingNode();
+            StartMenu();
+            Menu();
+        }
+
+        static void StartMenu()
+        {
+            int choice = 0;
+            while (true)
+            {
+                Console.WriteLine("Please choose how you want to create a tree: \n1-Read in from file\n2-Create tree from input");
+                string sChoice = Console.ReadLine();
+                try
+                {
+                    choice = Convert.ToInt32(sChoice);
+                    if(choice==1||choice==2)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please enter valid menu option");
+                    }
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Please enter a valid number.");
+                }
+            }
+
+            switch(choice)
+            {
+                case 1:
+                    test.Start();
+                    break;
+
+                case 2:
+                    CreateTreeUser();
+                    break;
+            }
         }
 
         static void Menu()
         {
-            //bool keepGoing=true;
-            //while(keepGoing)
-            //{
-           //}
+            bool keepGoing = true;
+            int choice = 0;
+            while (keepGoing)
+            {
+                while (true)
+                {
+                    Console.WriteLine("Please choose an option: \n1-Move a node\n2-Add a node\n3-Delete a node\n4-Get a node\n5-Write tree to file\n6-Exit");
+                    string sChoice = Console.ReadLine();
+                    try
+                    {
+                        choice = Convert.ToInt32(sChoice);
+                        if (choice == 1 || choice == 2 || choice == 3 || choice == 4 || choice == 5 || choice == 6)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Please enter valid menu option");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Please enter a valid number.");
+                    }
+                }
+
+                switch (choice)
+                {
+                    case 1:
+                        MovingNode();
+                        break;
+
+                    case 2:
+                        AddNodeByUser();
+                        break;
+                    case 3:
+                        RemoveNode();
+                        Console.WriteLine("Done");
+                        break;
+                    case 4:
+                        GettingNode();
+                        break;
+                    case 5:
+                        test.OutputToFile(test.root);
+                        Console.WriteLine("Done");
+                        break;
+                    case 6:
+                        keepGoing = false;
+                        break;
+                }
+            }
+        }
+
+        static void CreateTreeUser()
+        {
+            test.StartUser();
+            Node tempNode = null;
+            string value = "";
+            Console.WriteLine("Enter F for the node value when you are finished entering nodes.");
+            while (value != "f" || value != "f")
+            {
+                Console.WriteLine("Enter node value: ");
+                value = Console.ReadLine();
+                if(value == "f" || value == "f")
+                {
+                    break;
+                }
+                int depth = 0;
+                while (true)
+                {
+                    Console.WriteLine("Enter the node's depth(i.e. 0,1,2,etc: ");
+                    string dValue = Console.ReadLine();
+                    try
+                    {
+                        depth = Convert.ToInt32(dValue);
+                        break;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Please enter valid number: ");
+                    }
+                }
+                Node n = new Node(8 * depth, null, value);
+                if (n.WhiteSpace == 0)
+                {
+                    tempNode = test.root;
+                }
+                tempNode.AddNode(n);
+                tempNode = n;
+            }
+            
         }
 
         static void GettingNode()
