@@ -46,12 +46,28 @@ namespace Tree_Pt2
             switch(choice)
             {
                 case 1:
-                    test.Start();
+                    GetFile();
                     break;
 
                 case 2:
                     CreateTreeUser();
                     break;
+            }
+        }
+
+        //get filename for input
+        static void GetFile()
+        {
+            string notFound = "";
+            while (notFound != null)
+            {
+                Console.WriteLine(@"Enter file name and extenision for file in c:\workspace\: ");
+                string path = Console.ReadLine();
+                notFound = test.Start(path);
+                if (notFound != null)
+                {
+                    Console.WriteLine(notFound);
+                }
             }
         }
 
@@ -198,13 +214,18 @@ namespace Tree_Pt2
                 }
             }
 
-            //Display node value
-            Console.WriteLine(test.root.Get(FindNodes(nodeValue), getBranch));
+            string id = FindNodes(nodeValue);
+
+            if (id != null)
+                //Display node value
+                Console.WriteLine(test.root.Get(id, getBranch));
         }
 
         //move a node in the tree
         static void MovingNode()
         {
+            Node nodeToMoveTo;
+
             Console.WriteLine("Enter the value of the object you wish to move:");
             string nodeValue = Console.ReadLine();
             //find the node we want to move
@@ -213,8 +234,16 @@ namespace Tree_Pt2
             Console.WriteLine("Enter the value of the object you wish to move the other " +
                 "object to:");
             string parentValue = Console.ReadLine();
-            //find the object we want to move the value to
-            Node nodeToMoveTo = test.root.FindNode(FindNodes(parentValue));
+            if (parentValue.Equals(test.root.Content))
+            {
+                //find the object we want to move the value to
+                nodeToMoveTo = test.root;
+            }
+            else
+            {
+                //find the object we want to move the value to
+                nodeToMoveTo = test.root.FindNode(FindNodes(parentValue));
+            }
 
             //pass the id values to the node function
             test.root.MoveNode(nodeToMove.Id, nodeToMoveTo.Id);
@@ -289,6 +318,7 @@ namespace Tree_Pt2
             else
             {
                 Console.WriteLine("Can't find value");
+                return null;
             }
             return null;
         }

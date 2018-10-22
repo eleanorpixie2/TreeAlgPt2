@@ -19,12 +19,20 @@ namespace Tree_Pt2
         //temp node value for finding node by id in node
         public static Node temp;
 
+        private string pathWay;
+
         //starting function with file input
-        public void Start()
+        public string Start(string path)
         {
             root = new Node(0, null, null);
             root.Depth = -1;
-            LoadContent();
+            pathWay = path;
+            bool foundFile=LoadContent();
+            if(!foundFile)
+            {
+                return "File not found";
+            }
+            return null;
         }
  
         //starting function for user input
@@ -37,62 +45,81 @@ namespace Tree_Pt2
         //load content from a file
         private bool LoadContent()
         {
-            using (StreamReader sr = new StreamReader(@"C:\workspace\people.txt"))
+            StreamReader sr;
+            try
             {
-                //stores each line of file
-                string line;
-                int count = 0;
-                int parentCount = 0;
-
-                while ((line = sr.ReadLine()) != null)
+                sr = new StreamReader(string.Format(@"C:\workspace\{0}", pathWay));
+            }
+            catch(Exception e)
+            {
+                sr = null;
+            }
+            if (sr != null)
+            {
+                using (sr)
                 {
-                    for (int j = 0; j <= line.Length; j++)
+                    //stores each line of file
+                    string line;
+                    int count = 0;
+                    int parentCount = 0;
+
+                    while ((line = sr.ReadLine()) != null)
                     {
-                        //TO:DO parsing ID, Content
-                        //this is a check for depth
-                        if (line[j].Equals(' '))
+                        if (line.Length > 0)
                         {
-                            count++;
+                            for (int j = 0; j <= line.Length; j++)
+                            {
+                                //TO:DO parsing ID, Content
+
+                                //this is a check for depth
+                                if (line[j].Equals(' '))
+                                {
+                                    count++;
+                                }
+                                else if (line[j].Equals('\t'))
+                                {
+                                    count += 8; //1 tab = 8 empty spaces
+                                }
+                                else
+                                {
+                                    break; //breaks out of for loop thats checking each char
+                                }
+                            }
+
+                            if (parentCount == 0) // if it's count of whitespace was 0 then add set the tempNode to the root
+                            {
+                                tempNode = root;
+                            }
+
+                            if (count != parentCount)
+                            {
+                                AddNodesToTree(ToBeAdded); //add nodes in list to the tree
+
+                                if (root.Children[0] != null)
+                                {
+                                    tempNode = ToBeAdded[ToBeAdded.Count - 1]; //keep a reference of the last node added
+                                }
+                                ToBeAdded.Clear(); //clear the list
+                            }
+
+                            line = line.TrimStart('\t');
+                            AddNodeToList(count, ToBeAdded, line); // add node to the list with its info
+
+                            parentCount = count;
+                            count = 0; //reset whitespace counter
                         }
-                        else if (line[j].Equals('\t'))
-                        {
-                            count += 8; //1 tab = 8 empty spaces
-                        }
-                        else
-                        {
-                            break; //breaks out of for loop thats checking each char
-                        }
-                    }
+                    }//end of While
 
-                    if (parentCount == 0) // if it's count of whitespace was 0 then add set the tempNode to the root
-                    {
-                        tempNode = root;
-                    }
-
-                    if (count != parentCount)
-                    {
-                        AddNodesToTree(ToBeAdded); //add nodes in list to the tree
-
-                        if (root.Children[0] != null)
-                        {
-                            tempNode = ToBeAdded[ToBeAdded.Count - 1]; //keep a reference of the last node added
-                        }
-                        ToBeAdded.Clear(); //clear the list
-                    }
-
-                    line = line.TrimStart('\t');
-                    AddNodeToList(count, ToBeAdded, line); // add node to the list with its info
-
-                    parentCount = count;
-                    count = 0; //reset whitespace counter
-
-                }//end of While
-
-                AddNodesToTree(ToBeAdded);//Add last of the nodes
-                                               //check for IO errors and other exceptions
-                return true;
-
-            }//end of StreamReader
+                    AddNodesToTree(ToBeAdded);//Add last of the nodes
+                                              //check for IO errors and other exceptions
+                    return true;
+                }//end of StreamReader
+            }
+            else
+            {
+                return false;
+                
+            }
         }//end of LoadContent()
 
         //add a node to a temporary list of nodes

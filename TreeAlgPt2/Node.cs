@@ -251,6 +251,8 @@ namespace Tree_Pt2
 
             //remove moving node from current parent
             toBeMoved.Parent.Children.Remove(toBeMoved);
+            //reset parent to new parent object
+            toBeMoved.Parent = whereToBeMoved;
             //move the node to be a child of new parent
             whereToBeMoved.Children.Add(toBeMoved);
             //adjust the depth to the new location in the tree
@@ -260,10 +262,10 @@ namespace Tree_Pt2
         }
 
         //set the depth to be 1+ the parent's depth
-        private void IncreaseDepth(Node increaseing,Node constant)
+        private void IncreaseDepth(Node increasing,Node constant)
         {
-            increaseing.Depth = constant.Depth + 1;
-            foreach(Node n in increaseing.Children)
+            increasing.Depth = constant.Depth + 1;
+            foreach(Node n in increasing.Children)
             {
                 IncreaseDepth(n, n.Parent);
             }
